@@ -11,5 +11,4 @@ WORKDIR /app
 # RUN apk update && apk add --no-cache musl-dev
 COPY --from=base /code/target/release/vtechlabs /app/vtechlabs
 COPY files/hello.html /app/files/hello.html
-COPY --from=base /code/large.txt /code
 CMD /app/vtechlabs
