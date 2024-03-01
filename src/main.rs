@@ -1,11 +1,11 @@
 use std::{
     fs,
-    io::{prelude::*, BufReader},
+    io::{prelude::*},
     net::{TcpListener, TcpStream},
 };
 
 fn main() {
-    let listener = TcpListener::bind("0.0.0.0:7878").unwrap();
+    let listener = TcpListener::bind("0.0.0.0:80").unwrap();
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();

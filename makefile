@@ -1,6 +1,6 @@
 all:
 
 build:
-	docker build -t lab1 .
+	docker build -t labs .
 run:
-	docker run -p7878:7878 -d lab1
+	docker run -p80:80 -d labs
