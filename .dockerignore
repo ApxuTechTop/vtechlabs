@@ -1,3 +1,4 @@
 README.md
 makefile
 .gitignore
+.gitlab-ci.yml

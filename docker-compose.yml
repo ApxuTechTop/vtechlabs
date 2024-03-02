@@ -1,5 +1,6 @@
 version: '3'
 
+
 services:
   proxy:
     image: traefik:v2.11
@@ -12,8 +13,8 @@ services:
   server:
     image: registry.csc.sibsutis.ru/iv021s19/vtechlabs:lab3
     labels:
-      - "traefik.http.routers.server.rule = Host(`proxy.localhost`)"
+      - "traefik.http.routers.server.rule=Host(`localhost`)"
   whoami:
     image: traefik/whoami
     labels:
-      - "traefik.http.routers.whoami.rule = Host(`proxy.localhost`) && Path('/app')"
+      - "traefik.http.routers.whoami.rule=Host(`localhost`)&&Path(`/app`)"
