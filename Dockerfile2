@@ -5,7 +5,11 @@ COPY . /code
 RUN cargo build --release
 FROM dokken/ubuntu-22.04
 WORKDIR /app
+RUN useradd -ms /bin/bash test_user
+COPY --from=tianon/gosu /gosu /usr/local/bin/
 COPY --from=base /code/target/release/vtechlabs /app/vtechlabs
+COPY --from=base /code/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 COPY files/hello.html /app/files/hello.html
 EXPOSE 80
-CMD /app/vtechlabs
+ENTRYPOINT ["/app/entrypoint.sh"]
