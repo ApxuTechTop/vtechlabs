@@ -1,26 +1,41 @@
 use std::{
     fs,
-    io::{prelude::*},
+    io::prelude::*,
     net::{TcpListener, TcpStream},
 };
 
-fn main() {
-    let listener = TcpListener::bind("0.0.0.0:80").unwrap();
+use sea_orm::{Database, Entity};
+use actix_web::{web, App, HttpServer};
+use dotenv::dotenv;
+use std::env;
 
-    for stream in listener.incoming() {
-        let stream = stream.unwrap();
+mod model;
+mod routes;
 
-        handle_connection(stream);
-    }
+pub async fn initialize_database() -> Result<(), sea_orm::DbErr> {
+    let db = Database::connect_lazy().await?;
+    db.migrate().run().await?;
+    Ok(())
 }
 
-fn handle_connection(mut stream: TcpStream) {
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    dotenv().ok();
+    env_logger::init();
 
-    let status_line = "HTTP/1.1 200 OK";
-    let contents = fs::read_to_string("files/hello.html").unwrap();
-    let length = contents.len();
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let db = Database::connect_lazy().await.expect("Failed to connect to database");
 
-    let response = format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
-    println!("print\n");
-    stream.write_all(response.as_bytes()).unwrap();
+    db::initialize_database().await.expect("Failed to initialize database");
+
+    HttpServer::new(|| {
+        App::new()
+            .route("/users", web::get().to(routes::get_users))
+            .route("/users", web::put().to(routes::create_user))
+            .route("/users/{id}", web::get().to(routes::get_user_by_id))
+            .route("/users/{id}", web::delete().to(routes::delete_user))
+    })
+    .bind("0.0.0.0:80")?
+    .run()
+    .await
 }

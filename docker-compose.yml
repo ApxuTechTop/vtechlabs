@@ -10,6 +10,15 @@ services:
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+  postgresql:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: users_database
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
   server:
     image: registry.csc.sibsutis.ru/iv021s19/vtechlabs:lab4
     labels:
