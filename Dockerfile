@@ -1,7 +1,6 @@
 FROM rust:buster AS base
 WORKDIR /code
 COPY . /code
-
 RUN cargo build --release
 FROM dokken/ubuntu-22.04
 WORKDIR /app
